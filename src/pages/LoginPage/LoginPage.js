@@ -1,12 +1,14 @@
-import React, { useState, useContext } from 'react';
-import styled from 'styled-components';
+import { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { setAuthToken } from '../../utils';
 import { login, getMe } from '../../WebAPI';
-import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts';
+import styled from 'styled-components';
+import SubmitButton from '../../components/SubmitButton';
 
 const Root = styled.div`
-  height: 80vh;
+  margin: 0 10vw;
+  min-height: calc(100vh - 143px);
 `;
 
 const Title = styled.h1`
@@ -18,46 +20,45 @@ const ErrorMessage = styled.div`
   margin: 10px 0;
 `;
 
-const PageWrapper = styled.form`
-  width: 400px;
-  height: 250px;
-  margin: 5vh auto;
+const LoginWrapper = styled.form`
+  width: 360px;
+  height: 270px;
+  margin: 20px auto 0;
   padding: 20px;
   background: whitesmoke;
+  transition: all linear 0.2s;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  &:hover {
+    transition: all linear 0.2s;
+    box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.5);
+  }
 `;
 
 const InputWrapper = styled.div`
   margin: 20px 0;
-  & input {
-    border-radius: 10px;
-    outline: none;
-    border: 1px solid grey;
-    padding: 5px 10px;
-    font-size: 16px;
-    letter-spacing: 8px;
-    color: #808080;
-  }
 `;
 
-const LoginButton = styled.button`
-  padding: 5px 10px;
-  margin: 0 auto;
-  border-radius: 10px;
-  border: transparent;
-  background: #ccc;
+const Input = styled.input`
+  border: none;
   outline: none;
-  cursor: pointer;
+  padding: 5px 10px;
+  border-bottom: 1px solid #909090;
+  background: transparent;
+  letter-spacing: 5px;
+  color: #808080;
   font-size: 16px;
-  &:hover {
-    filter: brightness(90%);
-  }
+`;
+
+const ShowPasswordRadio = styled.div`
+  margin-top: 10px;
 `;
 
 export default function LoginPage() {
   const { setUser } = useContext(AuthContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState();
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -88,28 +89,37 @@ export default function LoginPage() {
 
   return (
     <Root>
-      <PageWrapper onSubmit={handleSubmit}>
+      <LoginWrapper onSubmit={handleSubmit}>
         <Title>請登入部落格</Title>
         <InputWrapper>
           帳號：{' '}
-          <input
+          <Input
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             onFocus={() => setErrorMessage(null)}
           />
         </InputWrapper>
+
         <InputWrapper>
           密碼：{' '}
-          <input
-            type="password"
+          <Input
+            type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             onFocus={() => setErrorMessage(null)}
           />
+          <ShowPasswordRadio>
+            <input
+              type="checkbox"
+              onClick={() => setShowPassword(showPassword ? false : true)}
+              id="password"
+            />
+            <label htmlFor="password">顯示密碼 </label>
+          </ShowPasswordRadio>
         </InputWrapper>
-        <LoginButton>登入</LoginButton>
+        <SubmitButton>登入</SubmitButton>
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-      </PageWrapper>
+      </LoginWrapper>
     </Root>
   );
 }

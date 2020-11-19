@@ -1,4 +1,4 @@
-import { getAuthToken } from "./utils";
+import { getAuthToken } from './utils';
 
 const BASE_URL = 'https://student-json-api.lidemy.me';
 
@@ -37,5 +37,20 @@ export const getMe = () => {
     headers: {
       authorization: `Bearer ${token}`,
     },
+  }).then((res) => res.json());
+};
+
+export const addPost = (title, body) => {
+  const token = getAuthToken();
+  return fetch(`${BASE_URL}/posts`, {
+    method: 'POST',
+    headers: {
+      authorization: `Bearer ${token}`,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      title,
+      body,
+    }),
   }).then((res) => res.json());
 };

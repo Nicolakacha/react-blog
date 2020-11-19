@@ -1,14 +1,5 @@
-import React from 'react';
 import styled from 'styled-components';
-import Bean from '../../images/bean.svg';
-
-function LoadingPicture() {
-  return (
-    <object type="image/svg+xml" data={Bean}>
-      svg-animation
-    </object>
-  );
-}
+import { ReactComponent as Bean } from '../../images/bean.svg';
 
 const LoadingWrapper = styled.div`
   padding-top: 150px;
@@ -19,7 +10,7 @@ const LoadingWrapper = styled.div`
 export default function Loading() {
   return (
     <LoadingWrapper>
-      <LoadingPicture />
+      <Bean />
     </LoadingWrapper>
   );
 }

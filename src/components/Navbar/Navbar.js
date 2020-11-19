@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
-import styled from 'styled-components';
+import { useContext } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { AuthContext } from '../../contexts';
 import { useNavigate } from 'react-router-dom';
 import { setAuthToken } from '../../utils';
+import styled from 'styled-components';
 
 const NavbarContainer = styled.div`
   height: 64px;
@@ -54,7 +54,6 @@ export default function Navbar() {
         {user && <Nav to="new-post" children="發佈文章" />}
         {user && <Nav to="/" onClick={handleLogout} children="登出" />}
         {!user && <Nav to="login" children="登入" />}
-        {!user && <Nav to="register" children="註冊" />}
       </NavbarList>
     </NavbarContainer>
   );

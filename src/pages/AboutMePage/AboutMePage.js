@@ -1,5 +1,5 @@
-import React from 'react';
 import styled from 'styled-components';
+import { ReactComponent as Bean } from '../../images/bean.svg';
 
 const Root = styled.div`
   margin: 0 10vw;
@@ -11,7 +11,7 @@ const PageWrapper = styled.div`
   height: 400px;
   margin: 20px auto 0;
   padding: 20px;
-  background: rgba(210, 210, 210, 0.6);
+  background: rgba(210, 210, 210, 0.4);
   text-align: center;
   transition: all linear 0.2s;
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
@@ -34,11 +34,12 @@ export default function AboutMePage() {
   return (
     <Root>
       <PageWrapper>
-        <Title>This is my blog</Title>
+        <Title>A Simple Blog</Title>
         <Content>
           這是 React SPA 部落格練習～
           <br />
-          程式導師計畫在學中...
+          使用 React Hooks, Styled Components, React Router 6
+          <Bean />
         </Content>
       </PageWrapper>
     </Root>

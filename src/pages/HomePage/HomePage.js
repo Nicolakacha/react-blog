@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { getPosts } from '../../WebAPI';
-import styled from 'styled-components';
-import Post from '../../components/Post';
 import { LoadingContext } from '../../contexts';
 import Loading from '../../components/Loading';
+import Post from '../../components/Post';
+import styled from 'styled-components';
 
 const Root = styled.div`
   margin: 0 10vw;
@@ -14,7 +14,7 @@ const Title = styled.h1`
   margin-bottom: 0;
 `;
 
-function LatestPosts({posts}) {
+function LatestPosts({ posts }) {
   return posts.slice(0, 5).map((post) => <Post key={post.id} post={post} />);
 }
 
@@ -35,12 +35,12 @@ export default function HomePage() {
     <Root>
       {isLoading ? (
         <Loading />
-      ) :
+      ) : (
         <>
-        <Title>最新文章</Title>
-        <LatestPosts posts={posts}/>
+          <Title>最新文章</Title>
+          <LatestPosts posts={posts} />
         </>
-      }
+      )}
     </Root>
   );
 }

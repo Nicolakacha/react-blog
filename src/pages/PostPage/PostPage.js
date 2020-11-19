@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react';
-import styled from 'styled-components';
+import { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { getPost } from '../../WebAPI';
 import { LoadingContext } from '../../contexts';
 import Post from '../../components/Post';
+import styled from 'styled-components';
 import Loading from '../../components/Loading';
 
 const Root = styled.div`

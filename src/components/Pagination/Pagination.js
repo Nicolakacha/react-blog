@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -55,5 +55,5 @@ Pagination.propTypes = {
   limit: PropTypes.number.isRequired,
   getData: PropTypes.func.isRequired,
   setValue: PropTypes.func.isRequired,
-  totalPostsNumber: PropTypes.number.isRequired,
+  totalPostsNumber: PropTypes.number,
 }
