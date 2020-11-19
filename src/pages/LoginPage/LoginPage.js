@@ -1,8 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
+const Root = styled.div``;
+
 export default function LoginPage() {
   return (
-    <div>login</div>
+    <Root>login</Root>
   );
 }
