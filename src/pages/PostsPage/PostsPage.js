@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { getPosts, getLimitedPosts } from '../../WebAPI';
+import { LoadingContext } from '../../contexts';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Pagination from '../../components/Pagination';
+import Loading from '../../components/Loading';
 
 const Root = styled.div`
-  height: 80vh;
-  margin: 10vh 10vw 0;
+  margin: 0 10vw;
+  height: calc(100vh - 123px);
 `;
 
 const PostsContainer = styled.div`
@@ -36,34 +38,50 @@ function PostItem({ post }) {
 }
 
 export default function PostsPage() {
+  const { isLoading, setIsLoading } = useContext(LoadingContext);
   const [posts, setPosts] = useState([]);
   const [totalPostsNumber, setTotalPostsNumber] = useState();
   const [pagination, setPagination] = useState([]);
   const limit = 5;
-  
+
   useEffect(() => {
+    setIsLoading(() => true);
     getPosts().then((posts) => {
       const pages = Math.ceil(posts.length / limit);
       setTotalPostsNumber(posts.length);
       setPagination(Array.from({ length: pages }).map((_, i) => i + 1));
+      getLimitedPosts(1, limit)
+        .then((posts) => {
+          setPosts(posts);
+        })
+        .then(() => {
+          setIsLoading(() => false);
+        });
     });
-    getLimitedPosts(1, limit).then((posts) => setPosts(posts));
-  }, []);
+  }, [setIsLoading]);
 
   return (
     <Root>
-      {posts[0] && posts.map((post) => <PostItem key={post.id} post={post} />)}
-      <Pagination
-        totalPostsNumber={totalPostsNumber}
-        pagination={pagination}
-        limit={limit}
-        getData={getLimitedPosts}
-        setValue={setPosts}
-      />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          {' '}
+          {posts[0] &&
+            posts.map((post) => <PostItem key={post.id} post={post} />)}
+          <Pagination
+            totalPostsNumber={totalPostsNumber}
+            pagination={pagination}
+            limit={limit}
+            getData={getLimitedPosts}
+            setValue={setPosts}
+          />
+        </>
+      )}
     </Root>
   );
 }
 
 PostItem.propTypes = {
   post: PropTypes.object.isRequired,
-}
+};

@@ -4,6 +4,7 @@ import { Link, NavLink } from 'react-router-dom';
 import { AuthContext } from '../../contexts';
 import { useNavigate } from 'react-router-dom';
 import { setAuthToken } from '../../utils';
+
 const NavbarContainer = styled.div`
   height: 64px;
   display: flex;
@@ -42,12 +43,13 @@ export default function Navbar() {
     setUser(null);
     alert('登出成功');
     navigate('/');
-  }
-  
+  };
+
   return (
     <NavbarContainer>
       <Brand to="/" children="React Blog" />
       <NavbarList>
+        <Nav to="about-me" children="關於我" />
         <Nav to="posts" children="文章列表" />
         {user && <Nav to="new-post" children="發佈文章" />}
         {user && <Nav to="/" onClick={handleLogout} children="登出" />}

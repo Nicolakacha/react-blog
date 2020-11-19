@@ -37,7 +37,7 @@ export default function Pagination({
   return (
     <PaginationContainer>
       <PaginationDescription>
-        {`共有${totalPostsNumber}篇文章，目前在第${currentPage}頁`}
+        {`共有 ${totalPostsNumber} 篇文章，目前在第 ${currentPage} 頁`}
       </PaginationDescription>
       <Pages>
         {pagination.map((page) => (

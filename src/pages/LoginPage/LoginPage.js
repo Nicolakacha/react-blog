@@ -18,7 +18,7 @@ const ErrorMessage = styled.div`
   margin: 10px 0;
 `;
 
-const LoginWrapper = styled.form`
+const PageWrapper = styled.form`
   width: 400px;
   height: 250px;
   margin: 5vh auto;
@@ -51,7 +51,7 @@ const LoginButton = styled.button`
   &:hover {
     filter: brightness(90%);
   }
-`
+`;
 
 export default function LoginPage() {
   const { setUser } = useContext(AuthContext);
@@ -88,7 +88,7 @@ export default function LoginPage() {
 
   return (
     <Root>
-      <LoginWrapper onSubmit={handleSubmit}>
+      <PageWrapper onSubmit={handleSubmit}>
         <Title>請登入部落格</Title>
         <InputWrapper>
           帳號：{' '}
@@ -109,7 +109,7 @@ export default function LoginPage() {
         </InputWrapper>
         <LoginButton>登入</LoginButton>
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-      </LoginWrapper>
+      </PageWrapper>
     </Root>
   );
 }
