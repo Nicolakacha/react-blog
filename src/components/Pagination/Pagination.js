@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const PaginationContainer = styled.div`
   margin-top: 20px;
@@ -47,4 +48,12 @@ export default function Pagination({
       </Pages>
     </PaginationContainer>
   );
+}
+
+Pagination.propTypes = {
+  pagination: PropTypes.array.isRequired,
+  limit: PropTypes.number.isRequired,
+  getData: PropTypes.func.isRequired,
+  setValue: PropTypes.func.isRequired,
+  totalPostsNumber: PropTypes.number.isRequired,
 }

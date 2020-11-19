@@ -12,7 +12,7 @@ export default function HomePage() {
 
   useEffect(() => {
     getPosts().then((posts) => setPosts(posts));
-  });
+  }, []);
 
   return (
     <Root>
@@ -21,4 +21,8 @@ export default function HomePage() {
       ))}
     </Root>
   );
+}
+
+export const login = (username, password) => {
+  return 
 }

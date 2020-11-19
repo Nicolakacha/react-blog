@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { getPosts, getLimitedPosts } from '../../WebAPI';
+import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import Pagination from '../../components/Pagination';
 
 const Root = styled.div`
@@ -61,4 +62,8 @@ export default function PostsPage() {
       />
     </Root>
   );
+}
+
+PostItem.propTypes = {
+  post: PropTypes.object.isRequired,
 }

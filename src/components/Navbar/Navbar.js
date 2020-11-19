@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Link, NavLink } from 'react-router-dom';
-
+import { AuthContext } from '../../contexts';
+import { useNavigate } from 'react-router-dom';
+import { setAuthToken } from '../../utils';
 const NavbarContainer = styled.div`
   height: 64px;
   display: flex;
@@ -22,7 +24,7 @@ const NavbarList = styled.div`
 
 const Brand = styled(Link)`
   font-size: 32px;
-  color: #017A75;
+  color: #017a75;
 `;
 
 const Nav = styled(NavLink)`
@@ -33,14 +35,24 @@ const Nav = styled(NavLink)`
 `;
 
 export default function Navbar() {
+  const { user, setUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    setAuthToken('');
+    setUser(null);
+    alert('登出成功');
+    navigate('/');
+  }
+  
   return (
     <NavbarContainer>
       <Brand to="/" children="React Blog" />
       <NavbarList>
         <Nav to="posts" children="文章列表" />
-        <Nav to="new-post" children="發佈文章" />
-        <Nav to="login" children="登入" />
-        <Nav to="register"children="註冊" />
+        {user && <Nav to="new-post" children="發佈文章" />}
+        {user && <Nav to="/" onClick={handleLogout} children="登出" />}
+        {!user && <Nav to="login" children="登入" />}
+        {!user && <Nav to="register" children="註冊" />}
       </NavbarList>
     </NavbarContainer>
   );

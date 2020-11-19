@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const PostContainer = styled.div`
   padding: 20px;
@@ -29,4 +30,8 @@ export default function Post({ post }) {
       <PostBody>{post.body}</PostBody>
     </PostContainer>
   );
+}
+
+Post.propTypes = {
+  post: PropTypes.object.isRequired,
 }
