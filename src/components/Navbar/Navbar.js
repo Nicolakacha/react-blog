@@ -47,13 +47,13 @@ export default function Navbar() {
 
   return (
     <NavbarContainer>
-      <Brand to="/" children="React Blog" />
+      <Brand to="/react-blog" children="React Blog" />
       <NavbarList>
-        <Nav to="about-me" children="關於我" />
-        <Nav to="posts" children="文章列表" />
-        {user && <Nav to="new-post" children="發佈文章" />}
-        {user && <Nav to="/" onClick={handleLogout} children="登出" />}
-        {!user && <Nav to="login" children="登入" />}
+        <Nav to="/react-blog/about-me" children="關於我" />
+        <Nav to="/react-blog/posts" children="文章列表" />
+        {user && <Nav to="/react-blog/new-post" children="發佈文章" />}
+        {user && <Nav to="/react-blog/" onClick={handleLogout} children="登出" />}
+        {!user && <Nav to="/react-blog/login" children="登入" />}
       </NavbarList>
     </NavbarContainer>
   );

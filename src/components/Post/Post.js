@@ -24,7 +24,7 @@ const PostBody = styled.div`
 export default function Post({ post }) {
   return (
     <PostContainer>
-      <PostTitle to={`post/${post.id}`}>{post.title}</PostTitle>
+      <PostTitle>{post.title}</PostTitle>
       <PostDate>{new Date(post.createdAt).toLocaleString()}</PostDate>
       <PostBody>{post.body}</PostBody>
     </PostContainer>

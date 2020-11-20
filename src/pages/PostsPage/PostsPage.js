@@ -31,7 +31,7 @@ const PostDate = styled.div`
 function PostItem({ post }) {
   return (
     <PostsContainer>
-      <PostTitle to={`/post/${post.id}`}>{post.title}</PostTitle>
+      <PostTitle to={`/react-blog/post/${post.id}`}>{post.title}</PostTitle>
       <PostDate>{new Date(post.createdAt).toLocaleString()}</PostDate>
     </PostsContainer>
   );

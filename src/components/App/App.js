@@ -30,17 +30,19 @@ function App() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isGettingUser, setIsGettingUser] = useState(true);
+  const HOMEPAGE_URL = '/react-blog';
 
   useEffect(() => {
     if (getAuthToken() === '') {
-      return setIsGettingUser(false);
+      setIsGettingUser(false);
+    } else {
+      getMe().then((response) => {
+        if (response.ok) {
+          setUser(response.data);
+          setIsGettingUser(false);
+        }
+      });
     }
-    getMe().then((response) => {
-      if (response.ok) {
-        setUser(response.data);
-        setIsGettingUser(false);
-      }
-    });
   }, []);
 
   return (
@@ -50,12 +52,12 @@ function App() {
           {!isGettingUser && <Navbar />}
           <LoadingContext.Provider value={{ isLoading, setIsLoading }}>
             <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="login" element={<LoginPage />} />
-              <Route path="posts" element={<PostsPage />} />
-              <Route path="post/:id" element={<PostPage />} />
-              <Route path="new-post" element={<NewPostPage />} />
-              <Route path="about-me" element={<AboutMePage />} />
+              <Route path={HOMEPAGE_URL} element={<HomePage />} />
+              <Route path={`${HOMEPAGE_URL}/login`} element={<LoginPage />} />
+              <Route path={`${HOMEPAGE_URL}/posts`} element={<PostsPage />} />
+              <Route path={`${HOMEPAGE_URL}/post/:id`} element={<PostPage />} />
+              <Route path={`${HOMEPAGE_URL}/new-post`} element={<NewPostPage />} />
+              <Route path={`${HOMEPAGE_URL}/about-me`} element={<AboutMePage />} />
             </Routes>
           </LoadingContext.Provider>
           <Footer>Made with ❤️ by Nicolas</Footer>
