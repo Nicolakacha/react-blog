@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getPostAPI, getPostsAPI, getLimitedPostsAPI } from '../WebAPI';
-const postSlice = createSlice({
+const postsSlice = createSlice({
   name: 'posts',
   initialState: {
     isLoading: false,
@@ -35,16 +35,7 @@ export const {
   setIsLoading,
   setPost,
   setPosts,
-} = postSlice.actions;
-
-export const getPost = (id) => (dispatch) => {
-  dispatch(setIsLoading(true));
-  getPostAPI(id).then((res) => {
-    dispatch(setPost(res[0]));
-    dispatch(setIsLoading(false));
-  });
-  return () => dispatch(setPost(null));
-};
+} = postsSlice.actions;
 
 export const getPosts = () => (dispatch) => {
   getPostsAPI().then((res) => {
@@ -63,4 +54,15 @@ export const getLimitedPosts = (page, limit) => async (dispatch) => {
   });
 };
 
-export default postSlice.reducer;
+export const getPost = (id) => (dispatch) => {
+  dispatch(setIsLoading(true));
+  getPostAPI(id).then((res) => {
+    dispatch(setPost(res[0]));
+    dispatch(setIsLoading(false));
+  });
+  return () => {
+    dispatch(setPost(null));
+  };
+};
+
+export default postsSlice.reducer;

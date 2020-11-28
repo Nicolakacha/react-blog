@@ -1,7 +1,6 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { addPost } from '../../WebAPI';
-import { LoadingContext } from '../../contexts';
+import { addPostAPI } from '../../WebAPI';
 import styled from 'styled-components';
 import SubmitButton from '../../components/SubmitButton';
 
@@ -75,13 +74,13 @@ export default function NewPostPage() {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const { isLoading, setIsLoading } = useContext(LoadingContext);
+  const [ isLoading, setIsLoading ] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
-    addPost(title, body).then((response) => {
+    addPostAPI(title, body).then((response) => {
       if (response.ok === 0) {
         setErrorMessage(response.message);
         setIsLoading(false);

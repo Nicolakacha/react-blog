@@ -75,11 +75,11 @@ export default function LoginPage() {
               return setErrorMessage(response.toString());
             }
             setUser(response.data);
-            navigate('/');
+            navigate('/react-blog');
           })
           .catch((err) => {
             alert(err);
-            navigate('/');
+            navigate('/react-blog');
           });
       })
       .catch((err) => setErrorMessage(err));

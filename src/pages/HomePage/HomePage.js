@@ -1,15 +1,13 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getPostsAPI } from '../../WebAPI';
-
+import styled from 'styled-components';
 import Loading from '../../components/Loading';
 import Post from '../../components/Post';
-import styled from 'styled-components';
 import {
   getLimitedPosts,
   selectPosts,
   selectIsLoading,
-} from '../../redux/postSlice';
+} from '../../redux/postsSlice';
 
 const Root = styled.div`
   margin: 0 10vw;
@@ -40,7 +38,7 @@ export default function HomePage() {
       ) : (
         <>
           <Title>最新文章</Title>
-          <LatestPosts posts={posts} />
+          <LatestPosts posts={posts} />{' '}
         </>
       )}
     </Root>

@@ -11,7 +11,7 @@ import {
   selectIsLoading,
   selectPosts,
   setPosts,
-} from '../../redux/postSlice';
+} from '../../redux/postsSlice';
 
 const Root = styled.div`
   margin: 0 10vw;

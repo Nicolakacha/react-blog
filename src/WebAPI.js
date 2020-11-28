@@ -56,7 +56,7 @@ export const getMe = () => {
   }).then((res) => res.json());
 };
 
-export const addPost = (title, body) => {
+export const addPostAPI = (title, body) => {
   const token = getAuthToken();
   return fetch(`${BASE_URL}/posts`, {
     method: 'POST',

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { setAuthToken } from '../../utils';
 import { register, getMe } from '../../WebAPI';
 import { AuthContext } from '../../contexts';
-import { LoadingContext } from '../../contexts';
 import styled from 'styled-components';
 import SubmitButton from '../../components/SubmitButton';
 
@@ -66,10 +65,12 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
-  const { isLoading, setIsLoading } = useContext(LoadingContext);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
   const handleSubmit = (e) => {
     setIsLoading(true);
+    console.log(123);
     e.preventDefault();
     register({ nickname, username, password })
       .then((data) => {
@@ -85,11 +86,11 @@ export default function RegisterPage() {
               return setErrorMessage(response.toString());
             }
             setUser(response.data);
-            navigate('/');
+            navigate('/react-blog');
             setIsLoading(false);
           })
           .catch((err) => {
-            navigate('/');
+            navigate('/react-blog');
             setIsLoading(false);
             return setErrorMessage(err);
           });

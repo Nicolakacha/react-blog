@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import Post from '../../components/Post';
 import Loading from '../../components/Loading';
 import styled from 'styled-components';
-import { getPost, selectIsLoading, selectPost } from '../../redux/postSlice';
+import { getPost, selectIsLoading, selectPost } from '../../redux/postsSlice';
 
 const Root = styled.div`
   margin: 0 10vw;

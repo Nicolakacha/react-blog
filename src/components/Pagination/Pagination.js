@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
-import { getLimitedPosts } from '../../redux/postSlice';
+import { getLimitedPosts } from '../../redux/postsSlice';
 import PropTypes from 'prop-types';
 
 const PaginationContainer = styled.div`
