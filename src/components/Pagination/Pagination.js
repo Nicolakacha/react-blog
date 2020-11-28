@@ -1,5 +1,6 @@
-import { useState } from 'react';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { getLimitedPosts } from '../../redux/postSlice';
 import PropTypes from 'prop-types';
 
 const PaginationContainer = styled.div`
@@ -24,13 +25,13 @@ const PaginationDescription = styled.div`
 export default function Pagination({
   pagination,
   limit,
-  getData,
-  setValue,
   totalPostsNumber,
+  currentPage,
+  setCurrentPage,
 }) {
-  const [currentPage, setCurrentPage] = useState(1);
+  const dispatch = useDispatch();
   const handleClickPage = (page) => () => {
-    getData(page, limit).then((posts) => setValue(posts));
+    dispatch(getLimitedPosts(page, limit));
     setCurrentPage(page);
   };
 
@@ -41,9 +42,7 @@ export default function Pagination({
       </PaginationDescription>
       <Pages>
         {pagination.map((page) => (
-          <Page key={page} onClick={handleClickPage(page)}>
-            {page}
-          </Page>
+          <Page key={page} onClick={handleClickPage(page)} children={page} />
         ))}
       </Pages>
     </PaginationContainer>
@@ -56,4 +55,6 @@ Pagination.propTypes = {
   getData: PropTypes.func.isRequired,
   setValue: PropTypes.func.isRequired,
   totalPostsNumber: PropTypes.number,
-}
+  currentPage: PropTypes.number,
+  setCurrentPage: PropTypes.func,
+};

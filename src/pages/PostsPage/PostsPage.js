@@ -1,11 +1,17 @@
-import { useEffect, useState, useContext, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getPosts, getLimitedPosts } from '../../WebAPI';
-import { LoadingContext } from '../../contexts';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Pagination from '../../components/Pagination';
 import Loading from '../../components/Loading';
+import {
+  getLimitedPosts,
+  selectTotalPostsNumber,
+  selectIsLoading,
+  selectPosts,
+  setPosts,
+} from '../../redux/postSlice';
 
 const Root = styled.div`
   margin: 0 10vw;
@@ -31,30 +37,26 @@ const PostDate = styled.div`
 function PostItem({ post }) {
   return (
     <PostsContainer>
-      <PostTitle to={`/post/${post.id}`}>{post.title}</PostTitle>
+      <PostTitle to={`/react-blog/post/${post.id}`}>{post.title}</PostTitle>
       <PostDate>{new Date(post.createdAt).toLocaleString()}</PostDate>
     </PostsContainer>
   );
 }
 
 export default function PostsPage() {
-  const [posts, setPosts] = useState([]);
   const [pagination, setPagination] = useState([]);
-  const { isLoading, setIsLoading } = useContext(LoadingContext);
-  const totalPostsNumber = useRef();
-  const limit = 5;
+  const pages = useRef();
+  const dispatch = useDispatch();
+  const isLoading = useSelector(selectIsLoading);
+  const posts = useSelector(selectPosts);
+  const totalPostsNumber = useSelector(selectTotalPostsNumber);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    setIsLoading(() => true);
-    getPosts().then((posts) => {
-      const pages = Math.ceil(posts.length / limit);
-      totalPostsNumber.current = posts.length;
-      setPagination(Array.from({ length: pages }).map((_, i) => i + 1));
-      getLimitedPosts(1, limit)
-        .then((posts) => setPosts(posts))
-        .then(() => setIsLoading(() => false));
-    });
-  }, [setIsLoading]);
+    dispatch(getLimitedPosts(1, 5));
+    pages.current = Math.ceil(totalPostsNumber / 5);
+    setPagination(Array.from({ length: pages.current }).map((_, i) => i + 1));
+  }, [dispatch, totalPostsNumber]);
 
   return (
     <Root>
@@ -62,15 +64,19 @@ export default function PostsPage() {
         <Loading />
       ) : (
         <>
-          {' '}
           {posts[0] &&
-            posts.map((post) => <PostItem key={post.id} post={post} />)}
+            posts.map((post) => {
+              return <PostItem key={post.id} post={post} />;
+            })}
+
           <Pagination
-            totalPostsNumber={totalPostsNumber.current}
+            totalPostsNumber={totalPostsNumber}
             pagination={pagination}
-            limit={limit}
+            limit={5}
             getData={getLimitedPosts}
             setValue={setPosts}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
           />
         </>
       )}

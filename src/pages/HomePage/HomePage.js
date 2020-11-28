@@ -1,9 +1,15 @@
-import { useEffect, useState, useContext } from 'react';
-import { getPosts } from '../../WebAPI';
-import { LoadingContext } from '../../contexts';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getPostsAPI } from '../../WebAPI';
+
 import Loading from '../../components/Loading';
 import Post from '../../components/Post';
 import styled from 'styled-components';
+import {
+  getLimitedPosts,
+  selectPosts,
+  selectIsLoading,
+} from '../../redux/postSlice';
 
 const Root = styled.div`
   margin: 0 10vw;
@@ -19,17 +25,13 @@ function LatestPosts({ posts }) {
 }
 
 export default function HomePage() {
-  const { isLoading, setIsLoading } = useContext(LoadingContext);
-  const [posts, setPosts] = useState([]);
+  const dispatch = useDispatch();
+  const isLoading = useSelector(selectIsLoading);
+  const posts = useSelector(selectPosts);
 
   useEffect(() => {
-    setIsLoading(true);
-    getPosts()
-      .then((posts) => setPosts(posts))
-      .then(() => {
-        setIsLoading(false);
-      });
-  }, [setIsLoading]);
+    dispatch(getLimitedPosts(1, 5));
+  }, [dispatch]);
 
   return (
     <Root>

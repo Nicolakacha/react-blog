@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import { getAuthToken } from '../../utils';
 import { getMe } from '../../WebAPI';
 import Navbar from '../Navbar';
+import { Provider } from 'react-redux';
+import store from '../../redux/store';
 import {
   AboutMePage,
   LoginPage,
@@ -41,25 +43,27 @@ function App() {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
-      <Root>
-        <BrowserRouter>
-          <LoadingContext.Provider value={{ isLoading, setIsLoading }}>
-            <Navbar />
-            <Routes basename="/react-blog">
-              <Route path={'/'} element={<HomePage />} />
-              <Route path={'/register'} element={<RegisterPage />} />
-              <Route path={'/login'} element={<LoginPage />} />
-              <Route path={'/posts'} element={<PostsPage />} />
-              <Route path={'/post/:id'} element={<PostPage />} />
-              <Route path={'/new-post'} element={<NewPostPage />} />
-              <Route path={'/about-me'} element={<AboutMePage />} />
-            </Routes>
-          </LoadingContext.Provider>
-          <Footer>Made with ❤️ by Nicolas</Footer>
-        </BrowserRouter>
-      </Root>
-    </AuthContext.Provider>
+    <Provider store={store}>
+      <AuthContext.Provider value={{ user, setUser }}>
+        <Root>
+          <BrowserRouter>
+            <LoadingContext.Provider value={{ isLoading, setIsLoading }}>
+              <Navbar />
+              <Routes basename="/react-blog">
+                <Route path={'/'} element={<HomePage />} />
+                <Route path={'/register'} element={<RegisterPage />} />
+                <Route path={'/login'} element={<LoginPage />} />
+                <Route path={'/posts'} element={<PostsPage />} />
+                <Route path={'/post/:id'} element={<PostPage />} />
+                <Route path={'/new-post'} element={<NewPostPage />} />
+                <Route path={'/about-me'} element={<AboutMePage />} />
+              </Routes>
+            </LoadingContext.Provider>
+            <Footer>Made with ❤️ by Nicolas</Footer>
+          </BrowserRouter>
+        </Root>
+      </AuthContext.Provider>
+    </Provider>
   );
 }
 

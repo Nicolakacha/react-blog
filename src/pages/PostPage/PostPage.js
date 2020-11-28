@@ -1,10 +1,11 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { getPost } from '../../WebAPI';
-import { LoadingContext } from '../../contexts';
+
 import Post from '../../components/Post';
-import styled from 'styled-components';
 import Loading from '../../components/Loading';
+import styled from 'styled-components';
+import { getPost, selectIsLoading, selectPost } from '../../redux/postSlice';
 
 const Root = styled.div`
   margin: 0 10vw;
@@ -12,17 +13,11 @@ const Root = styled.div`
 `;
 
 export default function PostPage() {
-  const { isLoading, setIsLoading } = useContext(LoadingContext);
-  const [post, setPost] = useState(null);
   const { id } = useParams();
+  const dispatch = useDispatch();
+  const isLoading = useSelector(selectIsLoading);
+  const post = useSelector(selectPost);
+  useEffect(() => dispatch(getPost(id)), [dispatch, id]);
 
-  useEffect(() => {
-    setIsLoading(true);
-    getPost(id).then((post) => setPost(post[0]));
-    setIsLoading(false);
-  }, [id, setIsLoading]);
-
-  return (<Root>
-    {(!isLoading && post) ? <Post post={post} /> : <Loading />}
-    </Root>);
+  return <Root>{!isLoading && post ? <Post post={post} /> : <Loading />}</Root>;
 }

@@ -19,6 +19,7 @@ const PostDate = styled.div`
 
 const PostBody = styled.div`
   margin-top: 20px;
+  word-break: break-all;
 `;
 
 export default function Post({ post }) {
