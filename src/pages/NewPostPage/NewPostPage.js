@@ -88,7 +88,7 @@ export default function NewPostPage() {
         return;
       }
       setIsLoading(false);
-      navigate('/react-blog/');
+      navigate('/');
     });
   };
 

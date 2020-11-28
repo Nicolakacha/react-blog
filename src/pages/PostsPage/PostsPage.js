@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { getPosts, getLimitedPosts } from '../../WebAPI';
 import { LoadingContext } from '../../contexts';
@@ -31,32 +31,28 @@ const PostDate = styled.div`
 function PostItem({ post }) {
   return (
     <PostsContainer>
-      <PostTitle to={`/react-blog/post/${post.id}`}>{post.title}</PostTitle>
+      <PostTitle to={`/post/${post.id}`}>{post.title}</PostTitle>
       <PostDate>{new Date(post.createdAt).toLocaleString()}</PostDate>
     </PostsContainer>
   );
 }
 
 export default function PostsPage() {
-  const { isLoading, setIsLoading } = useContext(LoadingContext);
   const [posts, setPosts] = useState([]);
-  const [totalPostsNumber, setTotalPostsNumber] = useState();
   const [pagination, setPagination] = useState([]);
+  const { isLoading, setIsLoading } = useContext(LoadingContext);
+  const totalPostsNumber = useRef();
   const limit = 5;
 
   useEffect(() => {
     setIsLoading(() => true);
     getPosts().then((posts) => {
       const pages = Math.ceil(posts.length / limit);
-      setTotalPostsNumber(posts.length);
+      totalPostsNumber.current = posts.length;
       setPagination(Array.from({ length: pages }).map((_, i) => i + 1));
       getLimitedPosts(1, limit)
-        .then((posts) => {
-          setPosts(posts);
-        })
-        .then(() => {
-          setIsLoading(() => false);
-        });
+        .then((posts) => setPosts(posts))
+        .then(() => setIsLoading(() => false));
     });
   }, [setIsLoading]);
 
@@ -70,7 +66,7 @@ export default function PostsPage() {
           {posts[0] &&
             posts.map((post) => <PostItem key={post.id} post={post} />)}
           <Pagination
-            totalPostsNumber={totalPostsNumber}
+            totalPostsNumber={totalPostsNumber.current}
             pagination={pagination}
             limit={limit}
             getData={getLimitedPosts}

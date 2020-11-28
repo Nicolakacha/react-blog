@@ -18,7 +18,8 @@ export const getPost = (id) => {
   return fetch(`${BASE_URL}/posts?id=${id}`).then((res) => res.json());
 };
 
-export const login = (username, password) => {
+export const login = (user) => {
+  const { username, password } = user;
   return fetch(`${BASE_URL}/login`, {
     method: 'POST',
     headers: {
@@ -31,7 +32,8 @@ export const login = (username, password) => {
   }).then((res) => res.json());
 };
 
-export const register = (nickname, username, password) => {
+export const register = (user) => {
+  const { nickname, username, password } = user;
   return fetch(`${BASE_URL}/register`, {
     method: 'POST',
     headers: {

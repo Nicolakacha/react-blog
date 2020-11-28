@@ -71,7 +71,7 @@ export default function RegisterPage() {
   const handleSubmit = (e) => {
     setIsLoading(true);
     e.preventDefault();
-    register(nickname, username, password)
+    register({ nickname, username, password })
       .then((data) => {
         if (data.ok === 0) {
           setIsLoading(false);
@@ -85,11 +85,11 @@ export default function RegisterPage() {
               return setErrorMessage(response.toString());
             }
             setUser(response.data);
-            navigate('/react-blog/');
+            navigate('/');
             setIsLoading(false);
           })
           .catch((err) => {
-            navigate('/react-blog/');
+            navigate('/');
             setIsLoading(false);
             return setErrorMessage(err);
           });
