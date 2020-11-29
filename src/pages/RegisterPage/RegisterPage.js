@@ -1,10 +1,14 @@
-import { useState, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { setAuthToken } from '../../utils';
-import { register, getMe } from '../../WebAPI';
-import { AuthContext } from '../../contexts';
 import styled from 'styled-components';
-import SubmitButton from '../../components/SubmitButton';
+import { useDispatch, useSelector } from 'react-redux';
+import NormalButton from '../../components/NormalButton';
+import {
+  setUserErrorMessage,
+  selectIsUserLoading,
+  selectUserErrorMessage,
+  register,
+} from '../../redux/userSlice';
 
 const Root = styled.div`
   margin: 0 10vw;
@@ -13,11 +17,6 @@ const Root = styled.div`
 
 const Title = styled.h1`
   font-size: 24px;
-`;
-
-const ErrorMessage = styled.div`
-  color: red;
-  margin: 10px 0;
 `;
 
 const RegisterWrapper = styled.form`
@@ -58,92 +57,86 @@ const Loading = styled.div`
   color: #909090;
 `;
 
+const ErrorMessage = styled.div`
+  color: red;
+  margin: 10px 0;
+`;
+
+const SubmitButton = styled(NormalButton)`
+  margin: 10px auto;
+`;
+
 export default function RegisterPage() {
-  const { setUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [nickname, setNickname] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+  const userErrorMessage = useSelector(selectUserErrorMessage);
+  const isUserLoading = useSelector(selectIsUserLoading);
+  const setError = () => dispatch(setUserErrorMessage(null));
+  const setValue = (setState) => (e) => setState(e.target.value);
+  const togglePassword = () => setShowPassword(showPassword ? false : true);
 
   const handleSubmit = (e) => {
-    setIsLoading(true);
-    console.log(123);
     e.preventDefault();
-    register({ nickname, username, password })
-      .then((data) => {
-        if (data.ok === 0) {
-          setIsLoading(false);
-          return setErrorMessage(data.message);
-        }
-        setAuthToken(data.token);
-        getMe()
-          .then((response) => {
-            if (response.ok !== 1) {
-              setAuthToken(null);
-              return setErrorMessage(response.toString());
-            }
-            setUser(response.data);
-            navigate('/react-blog');
-            setIsLoading(false);
-          })
-          .catch((err) => {
-            navigate('/react-blog');
-            setIsLoading(false);
-            return setErrorMessage(err);
-          });
+    dispatch(
+      register({
+        nickname,
+        username,
+        password,
       })
-      .catch((err) => {
-        setIsLoading(false);
-        setErrorMessage(err);
-      });
+    ).then((userId) => {
+      if (userId) navigate('/react-blog');
+    });
   };
+
+  useEffect(() => () => dispatch(setUserErrorMessage(null)), [dispatch]);
 
   return (
     <Root>
       <RegisterWrapper onSubmit={handleSubmit}>
         <Title>註冊新帳號</Title>
         <InputWrapper>
-          暱稱：{' '}
+          暱稱：
           <Input
             value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-            onFocus={() => setErrorMessage(null)}
+            onChange={setValue(setNickname)}
+            onFocus={setError}
           />
         </InputWrapper>
         <InputWrapper>
-          帳號：{' '}
+          帳號：
           <Input
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            onFocus={() => setErrorMessage(null)}
+            onChange={setValue(setUsername)}
+            onFocus={setError}
           />
         </InputWrapper>
         <InputWrapper>
-          密碼：{' '}
+          密碼：
           <Input
             type={showPassword ? 'text' : 'password'}
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onFocus={() => setErrorMessage(null)}
+            onChange={setValue(setPassword)}
+            onFocus={setError}
           />
           <ShowPasswordRadio>
-            <input
-              type="checkbox"
-              onClick={() => setShowPassword(showPassword ? false : true)}
-              id="password"
-            />
+            <input type="checkbox" onClick={togglePassword} id="password" />
             <label htmlFor="password">顯示密碼 </label>
           </ShowPasswordRadio>
         </InputWrapper>
-        {isLoading ? (
+        {isUserLoading ? (
           <Loading>Loading...</Loading>
         ) : (
-          <SubmitButton>註冊</SubmitButton>
+          <>
+            <SubmitButton>註冊</SubmitButton>
+            {userErrorMessage && (
+              <ErrorMessage>{userErrorMessage}</ErrorMessage>
+            )}
+          </>
         )}
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       </RegisterWrapper>
     </Root>
   );

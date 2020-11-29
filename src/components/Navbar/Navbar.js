@@ -1,9 +1,11 @@
-import { useContext } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { AuthContext } from '../../contexts';
-import { useNavigate } from 'react-router-dom';
-import { setAuthToken } from '../../utils';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import {
+  logout,
+  selectUserId,
+  selectIsUserLoading,
+} from '../../redux/userSlice';
 
 const NavbarContainer = styled.div`
   height: 64px;
@@ -43,29 +45,28 @@ const Logout = styled.a`
 `;
 
 export default function Navbar() {
-  const { user, setUser } = useContext(AuthContext);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const userId = useSelector(selectUserId);
+  const isUserloading = useSelector(selectIsUserLoading);
+
   const handleLogout = () => {
-    setAuthToken('');
-    setUser(null);
-    alert('登出成功');
+    dispatch(logout());
     navigate('/react-blog');
   };
+
   return (
     <NavbarContainer>
       <Brand to="/react-blog" children="React Blog" />
       <NavbarList>
-        <Nav to="/react-blog/about-me" children="關於我" />
-        <Nav to="/react-blog/posts" children="文章列表" />
-        {localStorage.token ? (
+        {isUserloading ? null : (
           <>
-            {user && <Nav to="/react-blog/new-post" children="發佈文章" />}
-            {user && <Logout onClick={handleLogout} children="登出" />}
-          </>
-        ) : (
-          <>
-            {!user && <Nav to="/react-blog/login" children="登入" />}
-            {!user && <Nav to="/react-blog/register" children="註冊" />}
+            <Nav to="/react-blog/about-me" children="關於我" />
+            <Nav to="/react-blog/posts" children="文章列表" />
+            {userId && <Nav to="/react-blog/new-post" children="發表文章" />}
+            {userId && <Logout onClick={handleLogout} children="登出" />}
+            {!userId && <Nav to="/react-blog/login" children="登入" />}
+            {!userId && <Nav to="/react-blog/register" children="註冊" />}
           </>
         )}
       </NavbarList>

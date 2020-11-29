@@ -1,5 +1,10 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import NormalButton from '../NormalButton';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUserId } from '../../redux/userSlice';
+import { deletePost } from '../../redux/postsSlice';
 
 const PostContainer = styled.div`
   padding: 20px;
@@ -12,9 +17,7 @@ const PostTitle = styled.h2`
 `;
 
 const PostDate = styled.div`
-  padding-bottom: 20px;
   color: #707070;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 `;
 
 const PostBody = styled.div`
@@ -22,11 +25,48 @@ const PostBody = styled.div`
   word-break: break-all;
 `;
 
+const PostInfo = styled.div`
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+`;
+
+const PostButton = styled(NormalButton)`
+  margin: 10px 20px 10px 0px;
+`;
+
 export default function Post({ post }) {
+  const userId = useSelector(selectUserId);
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const currentPath = location.pathname;
+
+  const handleEditPost = (id) => () => navigate(`/react-blog/post/edit/${id}`);
+
+  const handleDeletePost = (postId) => () =>
+    dispatch(deletePost(postId)).then((res) => {
+      if (res.ok === 0) return;
+      currentPath === '/react-blog'
+        ? window.location.reload()
+        : navigate('/react-blog');
+    });
+    
   return (
     <PostContainer>
-      <PostTitle>{post.title}</PostTitle>
-      <PostDate>{new Date(post.createdAt).toLocaleString()}</PostDate>
+      <PostTitle>
+        {userId === post.userId ? '[我的文章] ' : '[某人的文章] '}
+        {post.title}
+      </PostTitle>
+      <PostInfo>
+        <PostDate>{new Date(post.createdAt).toLocaleString()}</PostDate>
+        {userId === post.userId ? (
+          <PostButton onClick={handleEditPost(post.id)}>編輯</PostButton>
+        ) : null}
+        {userId === post.userId ? (
+          <PostButton onClick={handleDeletePost(post.id)}> 刪除</PostButton>
+        ) : null}
+      </PostInfo>
+
       <PostBody>{post.body}</PostBody>
     </PostContainer>
   );
@@ -34,4 +74,4 @@ export default function Post({ post }) {
 
 Post.propTypes = {
   post: PropTypes.object.isRequired,
-}
+};

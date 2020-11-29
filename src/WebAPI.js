@@ -18,7 +18,45 @@ export const getPostAPI = (id) => {
   return fetch(`${BASE_URL}/posts?id=${id}`).then((res) => res.json());
 };
 
-export const login = (user) => {
+export const addPostAPI = ({ title, body }) => {
+  const token = getAuthToken();
+  return fetch(`${BASE_URL}/posts`, {
+    method: 'POST',
+    headers: {
+      authorization: `Bearer ${token}`,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      title,
+      body,
+    }),
+  }).then((res) => res.json());
+};
+
+export const editPostAPI = ({ title, body, id }) => {
+  const token = getAuthToken();
+  return fetch(`${BASE_URL}/posts/${id}`, {
+    method: 'PATCH',
+    headers: {
+      authorization: `Bearer ${token}`,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      title,
+      body,
+    }),
+  }).then((res) => res.json());
+};
+
+export const deletePostAPI = (id) => {
+  const token = getAuthToken();
+  return fetch(`${BASE_URL}/posts/${id}`, {
+    method: 'DELETE',
+    headers: { authorization: `Bearer ${token}` },
+  }).then((res) => res.json());
+};
+
+export const loginAPI = (user) => {
   const { username, password } = user;
   return fetch(`${BASE_URL}/login`, {
     method: 'POST',
@@ -32,7 +70,7 @@ export const login = (user) => {
   }).then((res) => res.json());
 };
 
-export const register = (user) => {
+export const registerAPI = (user) => {
   const { nickname, username, password } = user;
   return fetch(`${BASE_URL}/register`, {
     method: 'POST',
@@ -47,26 +85,11 @@ export const register = (user) => {
   }).then((res) => res.json());
 };
 
-export const getMe = () => {
+export const getMeAPI = () => {
   const token = getAuthToken();
   return fetch(`${BASE_URL}/me`, {
     headers: {
       authorization: `Bearer ${token}`,
     },
-  }).then((res) => res.json());
-};
-
-export const addPostAPI = (title, body) => {
-  const token = getAuthToken();
-  return fetch(`${BASE_URL}/posts`, {
-    method: 'POST',
-    headers: {
-      authorization: `Bearer ${token}`,
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      title,
-      body,
-    }),
   }).then((res) => res.json());
 };

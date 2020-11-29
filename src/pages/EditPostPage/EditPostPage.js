@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import NormalButton from '../../components/NormalButton';
 import { selectUserId } from '../../redux/userSlice';
 import {
-  addPost,
+  editPost,
+  getPost,
   setErrorMessage,
   selectErrorMessage,
-  selectIsLoading,
 } from '../../redux/postsSlice';
 
 const Root = styled.div`
@@ -72,45 +72,43 @@ const ErrorMessage = styled.div`
   font-size: 16px;
 `;
 
-const Loading = styled.div`
-  margin: 20px 0 10px 0;
-  color: #909090;
-`;
-
 const SubmitButton = styled(NormalButton)`
   margin: 10px auto;
 `;
 
-export default function NewPostPage() {
+export default function EditPostPage() {
+  const { id } = useParams();
+  const userId = useSelector(selectUserId);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const errorMessage = useSelector(selectErrorMessage);
-  const isLoading = useSelector(selectIsLoading);
-  const userId = useSelector(selectUserId);
   const setError = () => dispatch(setErrorMessage(null));
   const controlInput = (setValue) => (e) => setValue(e.target.value);
 
+  useEffect(() => {
+    dispatch(getPost(id)).then((res) => {
+      if (res.userId !== userId) return navigate('/react-blog/');
+      setTitle(res.title);
+      setBody(res.body);
+    });
+  }, [dispatch, navigate, id, userId]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(addPost({ title, body })).then((newPostResponse) => {
-      if (!newPostResponse.id) {
-        return dispatch(setErrorMessage(newPostResponse.message));
-      }
-      navigate('/react-blog/post/' + newPostResponse.id);
-    });
+    if (!title || !body || title.trim() === '' || body.trim() === '') {
+      return dispatch(setErrorMessage('不能空白哦'));
+    }
+    dispatch(editPost({ id, title, body }));
+    navigate('/react-blog/post/' + id);
   };
-
-  useEffect(() => {
-    if (!userId) navigate('/react-blog');
-  }, [userId, navigate]);
 
   return (
     <Root>
       <Form onSubmit={handleSubmit}>
         <TitleWrapper>
-          <Title>新文章</Title>
+          <Title>編輯文章 #{id}</Title>
         </TitleWrapper>
         <InputWrapper>
           <InputHeader>標題：</InputHeader>
@@ -129,14 +127,9 @@ export default function NewPostPage() {
             onFocus={setError}
           />
         </InputWrapper>
-        {isLoading ? (
-          <Loading>Loading...</Loading>
-        ) : (
-          <>
-            <SubmitButton>送出文章</SubmitButton>
-            {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-          </>
-        )}
+
+        <SubmitButton>送出文章</SubmitButton>
+        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       </Form>
     </Root>
   );

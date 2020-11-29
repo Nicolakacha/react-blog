@@ -1,5 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getPostAPI, getPostsAPI, getLimitedPostsAPI } from '../WebAPI';
+import {
+  getPostAPI,
+  getPostsAPI,
+  getLimitedPostsAPI,
+  addPostAPI,
+  editPostAPI,
+  deletePostAPI,
+} from '../WebAPI';
+
 const postsSlice = createSlice({
   name: 'posts',
   initialState: {
@@ -7,47 +15,54 @@ const postsSlice = createSlice({
     totalPostNumber: null,
     posts: [],
     post: null,
+    newPostResponse: null,
+    errorMessage: null,
   },
 
   reducers: {
     setIsLoading(state, action) {
       state.isLoading = action.payload;
     },
-    setPost: (state, action) => {
+    setPost(state, action) {
       state.post = action.payload;
     },
-    setTotalPostsNumber: (state, action) => {
+    setTotalPostsNumber(state, action) {
       state.totalPostNumber = action.payload.length;
     },
-    setPosts: (state, action) => {
+    setPosts(state, action) {
       state.posts = action.payload;
+    },
+    setNewPostResponse(state, action) {
+      state.newPostResponse = action.payload;
+    },
+    setErrorMessage(state, action) {
+      state.errorMessage = action.payload;
     },
   },
 });
 
-export const selectIsLoading = (state) => state.posts.isLoading;
-export const selectTotalPostsNumber = (state) => state.posts.totalPostNumber;
-export const selectPosts = (state) => state.posts.posts;
-export const selectPost = (state) => state.posts.post;
+export const selectPost = (store) => store.posts.post;
+export const selectPosts = (store) => store.posts.posts;
+export const selectIsLoading = (store) => store.posts.isLoading;
+export const selectNewPostResponse = (store) => store.posts.newPostResponse;
+export const selectErrorMessage = (store) => store.posts.errorMessage;
+export const selectTotalPostsNumber = (store) => store.posts.totalPostNumber;
 
 export const {
-  setTotalPostsNumber,
-  setIsLoading,
   setPost,
   setPosts,
+  setIsLoading,
+  setErrorMessage,
+  setTotalPostsNumber,
+  setNewPostResponse,
 } = postsSlice.actions;
 
-export const getPosts = () => (dispatch) => {
-  getPostsAPI().then((res) => {
-    dispatch(setTotalPostsNumber(res));
-  });
-};
+export const getPosts = () => (dispatch) =>
+  getPostsAPI().then((res) => dispatch(setTotalPostsNumber(res)));
 
 export const getLimitedPosts = (page, limit) => async (dispatch) => {
   dispatch(setIsLoading(true));
-  await getPostsAPI().then((res) => {
-    dispatch(setTotalPostsNumber(res));
-  });
+  await getPostsAPI().then((res) => dispatch(setTotalPostsNumber(res)));
   getLimitedPostsAPI(page, limit).then((res) => {
     dispatch(setPosts(res));
     dispatch(setIsLoading(false));
@@ -56,13 +71,24 @@ export const getLimitedPosts = (page, limit) => async (dispatch) => {
 
 export const getPost = (id) => (dispatch) => {
   dispatch(setIsLoading(true));
-  getPostAPI(id).then((res) => {
+  return getPostAPI(id).then((res) => {
     dispatch(setPost(res[0]));
     dispatch(setIsLoading(false));
+    return res[0];
   });
-  return () => {
-    dispatch(setPost(null));
-  };
 };
+
+export const addPost = (data) => (dispatch) => {
+  dispatch(setIsLoading(true));
+  return addPostAPI(data).then((res) => {
+    dispatch(setNewPostResponse(res));
+    dispatch(setIsLoading(false));
+    return res;
+  });
+};
+
+export const editPost = (data) => () => editPostAPI(data);
+
+export const deletePost = (id) => () => deletePostAPI(id).then((res) => res);
 
 export default postsSlice.reducer;

@@ -1,12 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AuthContext } from '../../contexts';
 import styled from 'styled-components';
-import { getAuthToken } from '../../utils';
-import { getMe } from '../../WebAPI';
 import Navbar from '../Navbar';
-import { Provider } from 'react-redux';
-import store from '../../redux/store';
+import { useDispatch } from 'react-redux';
+import { getMe } from '../../redux/userSlice';
 import {
   AboutMePage,
   LoginPage,
@@ -14,6 +11,7 @@ import {
   NewPostPage,
   PostPage,
   PostsPage,
+  EditPostPage,
   RegisterPage,
 } from '../../pages/';
 
@@ -31,36 +29,28 @@ const Footer = styled.div`
 `;
 
 function App() {
-  const [user, setUser] = useState(null);
-
+  const dispatch = useDispatch();
   useEffect(() => {
-    if (getAuthToken()) {
-      getMe().then((response) => {
-        if (response.ok) setUser(response.data);
-      });
-    }
-  }, []);
+    dispatch(getMe())
+  }, [dispatch]);
 
   return (
-    <Provider store={store}>
-      <AuthContext.Provider value={{ user, setUser }}>
-        <Root>
-          <BrowserRouter>
-            <Navbar />
-            <Routes basename="/react-blog">
-              <Route path={'/'} element={<HomePage />} />
-              <Route path={'/register'} element={<RegisterPage />} />
-              <Route path={'/login'} element={<LoginPage />} />
-              <Route path={'/posts'} element={<PostsPage />} />
-              <Route path={'/post/:id'} element={<PostPage />} />
-              <Route path={'/new-post'} element={<NewPostPage />} />
-              <Route path={'/about-me'} element={<AboutMePage />} />
-            </Routes>
-            <Footer>Made with ❤️ by Nicolas</Footer>
-          </BrowserRouter>
-        </Root>
-      </AuthContext.Provider>
-    </Provider>
+    <Root>
+      <BrowserRouter>
+        <Navbar />
+        <Routes basename="/react-blog">
+          <Route path={'/'} element={<HomePage />} />
+          <Route path={'/register'} element={<RegisterPage />} />
+          <Route path={'/login'} element={<LoginPage />} />
+          <Route path={'/posts'} element={<PostsPage />} />
+          <Route path={'/post/:id'} element={<PostPage />} />
+          <Route path={'/post/edit/:id'} element={<EditPostPage />} />
+          <Route path={'/new-post'} element={<NewPostPage />} />
+          <Route path={'/about-me'} element={<AboutMePage />} />
+        </Routes>
+        <Footer>Made with ❤️ by Nicolas</Footer>
+      </BrowserRouter>
+    </Root>
   );
 }
 
