@@ -37,7 +37,9 @@ const PostDate = styled.div`
 function PostItem({ post }) {
   return (
     <PostsContainer>
-      <PostTitle to={`/react-blog/post/${post.id}`}>{post.title}</PostTitle>
+      <PostTitle
+        to={`/react-blog/post/${post.id}`}
+      >{`[${post.user.nickname}的文章]  ${post.title}`}</PostTitle>
       <PostDate>{new Date(post.createdAt).toLocaleString()}</PostDate>
     </PostsContainer>
   );

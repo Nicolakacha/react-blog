@@ -54,7 +54,7 @@ export default function Post({ post }) {
   return (
     <PostContainer>
       <PostTitle>
-        {userId === post.userId ? '[我的文章] ' : '[某人的文章] '}
+        {userId === post.userId ? '[我的文章] ' : `[${post.user.nickname}的文章] `}
         {post.title}
       </PostTitle>
       <PostInfo>

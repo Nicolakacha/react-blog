@@ -10,12 +10,12 @@ export const getPostsAPI = () => {
 
 export const getLimitedPostsAPI = (page, limit) => {
   return fetch(
-    `${BASE_URL}/posts?_page=${page}&_limit=${limit}&_sort=createdAt&_order=desc`
+    `${BASE_URL}/posts?_page=${page}&_limit=${limit}&_sort=createdAt&_order=desc&_expand=user`
   ).then((res) => res.json());
 };
 
 export const getPostAPI = (id) => {
-  return fetch(`${BASE_URL}/posts?id=${id}`).then((res) => res.json());
+  return fetch(`${BASE_URL}/posts?id=${id}&_expand=user`).then((res) => res.json());
 };
 
 export const addPostAPI = ({ title, body }) => {
