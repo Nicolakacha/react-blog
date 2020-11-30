@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import FormBox from '../../components/FormBox';
 import NormalButton from '../../components/NormalButton';
 import { selectUserId } from '../../redux/userSlice';
 import {
@@ -24,20 +25,6 @@ const TitleWrapper = styled.div`
 const Title = styled.h1`
   font-size: 28px;
   margin: 0px;
-`;
-
-const Form = styled.form`
-  width: 460px;
-  height: 390px;
-  margin: 20px auto 0;
-  padding: 10px 30px 30px 30px;
-  background: whitesmoke;
-  transition: all linear 0.2s;
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-  &:hover {
-    transition: all linear 0.2s;
-    box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.5);
-  }
 `;
 
 const InputWrapper = styled.div`
@@ -108,10 +95,16 @@ export default function NewPostPage() {
 
   return (
     <Root>
-      <Form onSubmit={handleSubmit}>
+      <FormBox
+        onSubmit={handleSubmit}
+        $height={390}
+        $width={460}
+        $paddingType={'post'}
+      >
         <TitleWrapper>
           <Title>新文章</Title>
         </TitleWrapper>
+
         <InputWrapper>
           <InputHeader>標題：</InputHeader>
           <TitleInput
@@ -120,6 +113,7 @@ export default function NewPostPage() {
             onFocus={setError}
           />
         </InputWrapper>
+
         <InputWrapper>
           <InputHeader>內容：</InputHeader>
           <BodyInput
@@ -129,6 +123,7 @@ export default function NewPostPage() {
             onFocus={setError}
           />
         </InputWrapper>
+
         {isLoading ? (
           <Loading>Loading...</Loading>
         ) : (
@@ -137,7 +132,7 @@ export default function NewPostPage() {
             {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
           </>
         )}
-      </Form>
+      </FormBox>
     </Root>
   );
 }

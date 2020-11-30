@@ -59,10 +59,12 @@ export default function Navbar() {
     <NavbarContainer>
       <Brand to="/react-blog" children="React Blog" />
       <NavbarList>
-        {isUserloading ? null : (
+        <Nav to="/react-blog/about-me" children="關於我" />
+        <Nav to="/react-blog/posts" children="文章列表" />
+        {isUserloading ? (
+          <Nav to="/" children="檢查登入資訊中" />
+        ) : (
           <>
-            <Nav to="/react-blog/about-me" children="關於我" />
-            <Nav to="/react-blog/posts" children="文章列表" />
             {userId && <Nav to="/react-blog/new-post" children="發表文章" />}
             {userId && <Logout onClick={handleLogout} children="登出" />}
             {!userId && <Nav to="/react-blog/login" children="登入" />}

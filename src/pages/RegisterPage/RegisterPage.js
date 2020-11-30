@@ -2,7 +2,11 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
+import FormBox from '../../components/FormBox';
+import InputBox from '../../components/InputBox';
 import NormalButton from '../../components/NormalButton';
+import ErrorMessage from '../../components/ErrorMessage';
+
 import {
   setUserErrorMessage,
   selectIsUserLoading,
@@ -19,47 +23,13 @@ const Title = styled.h1`
   font-size: 24px;
 `;
 
-const RegisterWrapper = styled.form`
-  width: 360px;
-  height: 360px;
-  margin: 20px auto 0;
-  padding: 20px;
-  background: whitesmoke;
-  transition: all linear 0.2s;
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-  &:hover {
-    transition: all linear 0.2s;
-    box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.5);
-  }
-`;
-
-const InputWrapper = styled.div`
-  margin: 20px 0;
-`;
-
-const Input = styled.input`
-  border: none;
-  outline: none;
-  padding: 5px 10px;
-  border-bottom: 1px solid #909090;
-  background: transparent;
-  letter-spacing: 5px;
-  color: #808080;
-  font-size: 16px;
-`;
-
 const ShowPasswordRadio = styled.div`
-  margin-top: 10px;
+  margin-top: 20px;
 `;
 
 const Loading = styled.div`
-  margin: 20px 0 10px 0;
+  margin: 40px auto;
   color: #909090;
-`;
-
-const ErrorMessage = styled.div`
-  color: red;
-  margin: 10px 0;
 `;
 
 const SubmitButton = styled(NormalButton)`
@@ -73,21 +43,15 @@ export default function RegisterPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const userErrorMessage = useSelector(selectUserErrorMessage);
   const isUserLoading = useSelector(selectIsUserLoading);
+  const userErrorMessage = useSelector(selectUserErrorMessage);
   const setError = () => dispatch(setUserErrorMessage(null));
   const setValue = (setState) => (e) => setState(e.target.value);
   const togglePassword = () => setShowPassword(showPassword ? false : true);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(
-      register({
-        nickname,
-        username,
-        password,
-      })
-    ).then((userId) => {
+    dispatch(register({ nickname, username, password })).then((userId) => {
       if (userId) navigate('/react-blog');
     });
   };
@@ -96,48 +60,49 @@ export default function RegisterPage() {
 
   return (
     <Root>
-      <RegisterWrapper onSubmit={handleSubmit}>
+      <FormBox onSubmit={handleSubmit} $height={360} $width={360}>
         <Title>註冊新帳號</Title>
-        <InputWrapper>
-          暱稱：
-          <Input
-            value={nickname}
-            onChange={setValue(setNickname)}
-            onFocus={setError}
-          />
-        </InputWrapper>
-        <InputWrapper>
-          帳號：
-          <Input
-            value={username}
-            onChange={setValue(setUsername)}
-            onFocus={setError}
-          />
-        </InputWrapper>
-        <InputWrapper>
-          密碼：
-          <Input
-            type={showPassword ? 'text' : 'password'}
-            value={password}
-            onChange={setValue(setPassword)}
-            onFocus={setError}
-          />
-          <ShowPasswordRadio>
-            <input type="checkbox" onClick={togglePassword} id="password" />
-            <label htmlFor="password">顯示密碼 </label>
-          </ShowPasswordRadio>
-        </InputWrapper>
+
+        <InputBox
+          type={'text'}
+          title={'暱稱：'}
+          value={nickname}
+          handleInputFocus={setError}
+          handleInputChange={setValue(setNickname)}
+        />
+
+        <InputBox
+          type={'text'}
+          title={'帳號：'}
+          value={username}
+          handleInputFocus={setError}
+          handleInputChange={setValue(setUsername)}
+        />
+
+        <InputBox
+          type={showPassword ? 'text' : 'password'}
+          title={'密碼：'}
+          value={password}
+          handleInputFocus={setError}
+          handleInputChange={setValue(setPassword)}
+        />
+
+        <ShowPasswordRadio>
+          <input type="checkbox" onClick={togglePassword} id="password" />
+          <label htmlFor="password">顯示密碼 </label>
+        </ShowPasswordRadio>
+
         {isUserLoading ? (
           <Loading>Loading...</Loading>
         ) : (
           <>
+            <ErrorMessage errorMessage={userErrorMessage} $height={35}>
+              {userErrorMessage}
+            </ErrorMessage>
             <SubmitButton>註冊</SubmitButton>
-            {userErrorMessage && (
-              <ErrorMessage>{userErrorMessage}</ErrorMessage>
-            )}
           </>
         )}
-      </RegisterWrapper>
+      </FormBox>
     </Root>
   );
 }

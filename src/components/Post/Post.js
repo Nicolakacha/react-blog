@@ -37,8 +37,8 @@ const PostButton = styled(NormalButton)`
 export default function Post({ post }) {
   const userId = useSelector(selectUserId);
   const dispatch = useDispatch();
-  const location = useLocation();
   const navigate = useNavigate();
+  const location = useLocation();
   const currentPath = location.pathname;
 
   const handleEditPost = (id) => () => navigate(`/react-blog/post/edit/${id}`);
@@ -50,23 +50,24 @@ export default function Post({ post }) {
         ? window.location.reload()
         : navigate('/react-blog');
     });
-    
+
   return (
     <PostContainer>
       <PostTitle>
-        {userId === post.userId ? '[我的文章] ' : `[${post.user.nickname}的文章] `}
+        {userId === post.userId
+          ? '[我的文章] '
+          : `[${post.user.nickname}的文章] `}
         {post.title}
       </PostTitle>
       <PostInfo>
         <PostDate>{new Date(post.createdAt).toLocaleString()}</PostDate>
         {userId === post.userId ? (
-          <PostButton onClick={handleEditPost(post.id)}>編輯</PostButton>
-        ) : null}
-        {userId === post.userId ? (
-          <PostButton onClick={handleDeletePost(post.id)}> 刪除</PostButton>
+          <>
+            <PostButton onClick={handleEditPost(post.id)}>編輯</PostButton>
+            <PostButton onClick={handleDeletePost(post.id)}> 刪除</PostButton>
+          </>
         ) : null}
       </PostInfo>
-
       <PostBody>{post.body}</PostBody>
     </PostContainer>
   );

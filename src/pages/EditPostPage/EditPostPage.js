@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import FormBox from '../../components/FormBox';
 import NormalButton from '../../components/NormalButton';
 import { selectUserId } from '../../redux/userSlice';
 import {
@@ -24,20 +25,6 @@ const TitleWrapper = styled.div`
 const Title = styled.h1`
   font-size: 28px;
   margin: 0px;
-`;
-
-const Form = styled.form`
-  width: 460px;
-  height: 390px;
-  margin: 20px auto 0;
-  padding: 10px 30px 30px 30px;
-  background: whitesmoke;
-  transition: all linear 0.2s;
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-  &:hover {
-    transition: all linear 0.2s;
-    box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.5);
-  }
 `;
 
 const InputWrapper = styled.div`
@@ -87,14 +74,6 @@ export default function EditPostPage() {
   const setError = () => dispatch(setErrorMessage(null));
   const controlInput = (setValue) => (e) => setValue(e.target.value);
 
-  useEffect(() => {
-    dispatch(getPost(id)).then((res) => {
-      if (res.userId !== userId) return navigate('/react-blog/');
-      setTitle(res.title);
-      setBody(res.body);
-    });
-  }, [dispatch, navigate, id, userId]);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!title || !body || title.trim() === '' || body.trim() === '') {
@@ -104,9 +83,22 @@ export default function EditPostPage() {
     navigate('/react-blog/post/' + id);
   };
 
+  useEffect(() => {
+    dispatch(getPost(id)).then((res) => {
+      if (res.userId !== userId) return navigate('/react-blog/');
+      setTitle(res.title);
+      setBody(res.body);
+    });
+  }, [dispatch, navigate, id, userId]);
+
   return (
     <Root>
-      <Form onSubmit={handleSubmit}>
+      <FormBox
+        onSubmit={handleSubmit}
+        $height={390}
+        $width={460}
+        $paddingType={'post'}
+      >
         <TitleWrapper>
           <Title>編輯文章 #{id}</Title>
         </TitleWrapper>
@@ -130,7 +122,7 @@ export default function EditPostPage() {
 
         <SubmitButton>送出文章</SubmitButton>
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-      </Form>
+      </FormBox>
     </Root>
   );
 }
