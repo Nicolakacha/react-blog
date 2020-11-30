@@ -62,7 +62,7 @@ export default function LoginPage() {
         <Title>請登入部落格</Title>
         <InputBox
           type={'text'}
-          title={'帳號'}
+          title={'帳號：'}
           value={username}
           handleInputFocus={setError}
           handleInputChange={setValue(setUsername)}

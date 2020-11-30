@@ -49,6 +49,7 @@ export default function Post({ post }) {
       currentPath === '/react-blog'
         ? window.location.reload()
         : navigate('/react-blog');
+      console.log(currentPath);
     });
 
   return (
