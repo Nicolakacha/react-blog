@@ -14,6 +14,7 @@ const PostContainer = styled.div`
 
 const PostTitle = styled.h2`
   font-size: 24px;
+  word-break: break-all;
 `;
 
 const PostDate = styled.div`
@@ -46,7 +47,7 @@ export default function Post({ post }) {
   const handleDeletePost = (postId) => () =>
     dispatch(deletePost(postId)).then((res) => {
       if (res.ok === 0) return;
-      currentPath === '/react-blog'
+      currentPath === ('/react-blog' || '/react-blog/')
         ? window.location.reload()
         : navigate('/react-blog');
       console.log(currentPath);
