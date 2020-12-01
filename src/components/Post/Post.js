@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import NormalButton from '../NormalButton';
-import { useNavigate, useLocation } from 'react-router-dom';
+import Button from '../Button';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUserId } from '../../redux/userSlice';
-import { deletePost } from '../../redux/postsSlice';
+import { deletePost, getLimitedPosts } from '../../redux/postsSlice';
 
 const PostContainer = styled.div`
   padding: 20px;
@@ -31,7 +31,7 @@ const PostInfo = styled.div`
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 `;
 
-const PostButton = styled(NormalButton)`
+const PostButton = styled(Button)`
   margin: 10px 20px 10px 0px;
 `;
 
@@ -39,18 +39,13 @@ export default function Post({ post }) {
   const userId = useSelector(selectUserId);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
-  const currentPath = location.pathname;
-
   const handleEditPost = (id) => () => navigate(`/react-blog/post/edit/${id}`);
 
   const handleDeletePost = (postId) => () =>
     dispatch(deletePost(postId)).then((res) => {
       if (res.ok === 0) return;
-      currentPath === ('/react-blog' || '/react-blog/')
-        ? window.location.reload()
-        : navigate('/react-blog');
-      console.log(currentPath);
+      dispatch(getLimitedPosts(1, 5));
+      navigate('/react-blog');
     });
 
   return (
