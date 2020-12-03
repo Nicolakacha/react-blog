@@ -87,7 +87,12 @@ export const addPost = (data) => (dispatch) => {
   });
 };
 
-export const editPost = (data) => () => editPostAPI(data);
+export const editPost = (data) => (dispatch) => {
+  dispatch(setIsLoading(true));
+  return editPostAPI(data).then((res) => {
+    dispatch(setPost(res));
+  });
+};
 
 export const deletePost = (id) => () => deletePostAPI(id).then((res) => res);
 
