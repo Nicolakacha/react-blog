@@ -2,8 +2,7 @@
 
 這是為了練習 React Hooks 及 Redux 所實作的 SPA 部落格，
 
-## DEMO
-[連結](https://nicolakacha.github.io/react-blog/)
+## [DEMO](https://nicolakacha.github.io/react-blog/)
 
 ![部落格1](https://i.imgur.com/sTz53JL.png)
 
