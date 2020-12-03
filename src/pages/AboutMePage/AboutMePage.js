@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { ReactComponent as Bean } from '../../images/bean.svg';
 
 const Root = styled.div`
   margin: 0 10vw;
@@ -26,13 +25,8 @@ const Title = styled.h1`
 `;
 
 const Content = styled.div`
-  display: flex
-  justify-content: center;
+  text-align: left;
 `;
-
-const BeanWrapper = styled.div`
-  transform: translateX(4%);
-`
 
 export default function AboutMePage() {
   return (
@@ -41,8 +35,8 @@ export default function AboutMePage() {
         <Title>A Simple Blog</Title>
         <Content>
           利用 React 實作 SPA 部落格～
-          <br />
-          <BeanWrapper><Bean /></BeanWrapper> 
+          <br/><br/>
+          從文學到程式，對各種領域充滿好奇，參與 Lidemy 程式導師計畫自此打開程式開發的大門，認為網路是超棒的知識載體，以不斷成長的前端工程師為目標，並期許自己在渴望新事物的同時，也能成為帶來新事物的人。
         </Content>
       </Container>
     </Root>

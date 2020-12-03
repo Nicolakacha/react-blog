@@ -42,7 +42,7 @@ export default function Pagination({
       </PaginationDescription>
       <Pages>
         {pagination.map((page) => (
-          <Page key={page} onClick={handleClickPage(page)} children={page} />
+          <Page href='#' key={page} onClick={handleClickPage(page)} children={page} />
         ))}
       </Pages>
     </PaginationContainer>

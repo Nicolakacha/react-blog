@@ -89,6 +89,7 @@ export default function EditPostPage() {
       setTitle(res.title);
       setBody(res.body);
     });
+    return () => dispatch(getPost(id));
   }, [dispatch, navigate, id, userId]);
 
   return (
@@ -116,7 +117,7 @@ export default function EditPostPage() {
           />
         </InputWrapper>
 
-        <SubmitButton>送出文章</SubmitButton>
+        <SubmitButton href='#'>送出文章</SubmitButton>
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       </Form>
     </Root>
