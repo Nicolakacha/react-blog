@@ -1,6 +1,6 @@
 # SPA 部落格
 
-這是為了練習 React Hooks 及 Redux 所實作的 SPA 部落格，
+這是為了練習 React Hooks 及 Redux 所實作的 SPA 部落格。
 
 ## [DEMO](https://nicolakacha.github.io/react-blog/)
 
